@@ -8,20 +8,20 @@ parameters:
     type: enum
     default: "circleci/clojure:openjdk-11-tools-deps"
     enum: ["circleci/clojure:openjdk-11-tools-deps", "circleci/clojure:openjdk-8-tools-deps"]
+  cljdoc-analyzer-dep:
+    type: string
+    default: '{:deps {cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer.git" :sha "323343a3d644fed486621032bd0b5a21171e4b09"}}})'
+  cljdoc-analyzer-args:
+    type: string
+    default: '{:project "bidi" :version "2.1.3" :jarpath "https://repo.clojars.org/bidi/bidi/2.1.3/bidi-2.1.3.jar" :pompath "https://repo.clojars.org/bidi/bidi/2.1.3/bidi-2.1.3.pom"}'
 
 jobs:
   build:
     docker:
       - image: << pipeline.parameters.image-name >>
 
-    environment:
-      DEP_FALLBACK: '{:deps {cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer.git" :sha "323343a3d644fed486621032bd0b5a21171e4b09"}}})'
-
     steps:
-      # Env vars cannot be used for cache keys so we put
-      # it in a file and use the checksum of that file
-      # https://discuss.circleci.com/t/10994/9
-      - run: echo ${CLJDOC_ANALYZER_DEP:-$DEP_FALLBACK} > /tmp/cache-key
+      - run: echo << pipeline.parameters.cljdoc-analyzer-dep >> > /tmp/cache-key
 
       - restore_cache:
           keys:
@@ -40,9 +40,10 @@ jobs:
 
       - run:
           name: Run analysis
-          command: clojure -Sdeps "${CLJDOC_ANALYZER_DEP:-$DEP_FALLBACK}" -m cljdoc-analyzer.cljdoc-main "${CLJDOC_ANALYZER_ARGS:-$FALLBACK}"
-          environment:
-            - FALLBACK: '{:project "bidi" :version "2.1.3" :jarpath "https://repo.clojars.org/bidi/bidi/2.1.3/bidi-2.1.3.jar" :pompath "https://repo.clojars.org/bidi/bidi/2.1.3/bidi-2.1.3.pom"}'
+          command: >
+            clojure -Sdeps << pipeline.parameters.cljdoc-analyzer-dep >>
+            -M -m cljdoc-analyzer.cljdoc-main
+            << pipeline.parameters.cljdoc-analyzer-args >>
 
       - store_artifacts:
           path: /tmp/cljdoc/analysis-out/
