@@ -21,7 +21,9 @@ jobs:
       - image: << pipeline.parameters.image-name >>
 
     steps:
-      - run: echo '<< pipeline.parameters.cljdoc-analyzer-dep >>' > /tmp/cache-key
+      - run:
+          name: Prep cache key
+          command: echo '<< pipeline.parameters.cljdoc-analyzer-dep >>' > /tmp/cache-key
 
       - restore_cache:
           keys:
@@ -36,7 +38,7 @@ jobs:
 
       - run:
           name: Print build parameters
-          command: echo "$CLJDOC_ANALYZER_ARGS"
+          command: echo '<< pipeline.parameters.cljdoc-analyzer-args >>'
 
       - run:
           name: Run analysis
