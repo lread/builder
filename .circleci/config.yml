@@ -10,7 +10,7 @@ parameters:
     enum: ["circleci/clojure:openjdk-11-tools-deps", "circleci/clojure:openjdk-8-tools-deps"]
   cljdoc-analyzer-dep:
     type: string
-    default: '{:deps {cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer.git" :sha "323343a3d644fed486621032bd0b5a21171e4b09"}}})'
+    default: '{:deps {cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer.git" :sha "323343a3d644fed486621032bd0b5a21171e4b09"}}}'
   cljdoc-analyzer-args:
     type: string
     default: '{:project "bidi" :version "2.1.3" :jarpath "https://repo.clojars.org/bidi/bidi/2.1.3/bidi-2.1.3.jar" :pompath "https://repo.clojars.org/bidi/bidi/2.1.3/bidi-2.1.3.pom"}'
