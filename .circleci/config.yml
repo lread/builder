@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Run analysis
           command: >
-            clojure -Sdeps << pipeline.parameters.cljdoc-analyzer-dep >>
+            clojure -Sdeps '<< pipeline.parameters.cljdoc-analyzer-dep >>'
             -M -m cljdoc-analyzer.cljdoc-main
             '<< pipeline.parameters.cljdoc-analyzer-args >>'
 
