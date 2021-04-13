@@ -2,15 +2,17 @@
 #
 # Check https://circleci.com/docs/2.0/language-clojure/ for more details
 #
-version: 2
+version: 2.1
+parameters:
+  image-name:
+    type: enum
+    default: "circleci/clojure:openjdk-11-tools-deps"
+    enum: ["circleci/clojure:openjdk-11-tools-deps" "circleci/clojure:openjdk-8-tools-deps"]
+
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      # reference:
-      # https://circleci.com/docs/2.0/configuration-reference/#docker--machine--macosexecutor
-      - image: circleci/clojure:tools-deps
-        command: "/bin/bash"
+      - image: << pipeline.parameters.image-name >>
 
     environment:
       DEP_FALLBACK: '{:deps {cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer.git" :sha "323343a3d644fed486621032bd0b5a21171e4b09"}}})'
@@ -25,6 +27,12 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "/tmp/cache-key" }}
           - v1-dependencies- # fallback if not cache found
+
+      - run:
+          name: Tools versions
+          command: |
+            clojure -Sdescribe
+            java -version
 
       - run:
           name: Print build parameters
