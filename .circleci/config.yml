@@ -7,7 +7,7 @@ parameters:
   image-name:
     type: enum
     default: "circleci/clojure:openjdk-11-tools-deps"
-    enum: ["circleci/clojure:openjdk-11-tools-deps" "circleci/clojure:openjdk-8-tools-deps"]
+    enum: ["circleci/clojure:openjdk-11-tools-deps", "circleci/clojure:openjdk-8-tools-deps"]
 
 jobs:
   build:
