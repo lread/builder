@@ -21,7 +21,7 @@ jobs:
       - image: << pipeline.parameters.image-name >>
 
     steps:
-      - run: echo << pipeline.parameters.cljdoc-analyzer-dep >> > /tmp/cache-key
+      - run: echo '<< pipeline.parameters.cljdoc-analyzer-dep >>' > /tmp/cache-key
 
       - restore_cache:
           keys:
@@ -43,7 +43,7 @@ jobs:
           command: >
             clojure -Sdeps << pipeline.parameters.cljdoc-analyzer-dep >>
             -M -m cljdoc-analyzer.cljdoc-main
-            << pipeline.parameters.cljdoc-analyzer-args >>
+            '<< pipeline.parameters.cljdoc-analyzer-args >>'
 
       - store_artifacts:
           path: /tmp/cljdoc/analysis-out/
